@@ -1,0 +1,27 @@
+services:
+    wireshark:
+        image: eecs388/wireshark
+        restart: always
+        # Allocate sufficient memory to the Wireshark GUI process.
+        # If your machine is running out of memory, you might try decreasing this,
+        # though Wireshark may run into instability if you do so.
+        shm_size: 2g
+        # Access Wireshark via http://localhost:38803 in your browser,
+        # or by vnc://localhost:38853 in a VNC client.
+        ports:
+            - 38803:5800
+            - 38853:5900
+        volumes:
+            - ..:/workspaces/project3
+            - ./preferences:/config/xdg/config/wireshark/preferences
+        environment:
+            # Some sensible defaults to give Wireshark's interface enough room to breathe.
+            # Feel free to change as you wish.
+            - DISPLAY_WIDTH=1920
+            - DISPLAY_HEIGHT=1080
+    workspace:
+        build: .
+        volumes:
+            - ..:/workspaces/project3
+        # Prevent container from instantly exiting, allowing us to attach terminal
+        command: /bin/sh -c "sleep infinity"
